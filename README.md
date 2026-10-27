@@ -1,6 +1,6 @@
 # ARM OpenWrt 云编译
 
-此仓库从 [openwrt-build](https://github.com/licong87/openwrt-build) 拆分，使用 LibWrt 25.12-nss 源码编译 IPQ60xx 固件。
+此仓库从 [openwrt-build-x86](https://github.com/licong87/openwrt-build-x86) 拆分，使用 LibWrt 25.12-nss 源码编译 IPQ60xx 固件。
 
 在 Actions 中运行 `ipq60xx-libWrt`，工作流会分别编译：
 

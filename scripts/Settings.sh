@@ -128,7 +128,9 @@ customization_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 mkdir -p files/etc/uci-defaults
 cp "$customization_root/files/arm/98-arm-pppoe-ipv6" files/etc/uci-defaults/98-arm-pppoe-ipv6
 chmod +x files/etc/uci-defaults/98-arm-pppoe-ipv6
-python3 "$customization_root/scripts/ZeroTierDefaults.py" "$PWD"
+mkdir -p files/etc/zerotier
+    touch files/etc/zerotier/.keep
+    python3 "$customization_root/scripts/ZeroTierDefaults.py" "$PWD"
 python3 "$customization_root/scripts/NikkiDefaults.py" "$PWD"
 python3 "$customization_root/scripts/ServiceDefaults.py" "$PWD"
 

@@ -1,0 +1,51 @@
+name: Auto-Clean
+
+on:
+  #自动清理：每周日晚上 8:17 (北京时间)，UTC 时间为 12:17
+  schedule:
+    - cron: '17 12 * * 0'
+  #手动清理
+  workflow_dispatch:
+    inputs:
+      NUMBER:
+        default: '5'
+        required: false
+        type: string
+      CLEAR_CACHE:
+        description: '是否清空编译缓存（默认保留）'
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  actions: write
+
+env:
+  GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+jobs:
+  auto_clean:
+    runs-on: ubuntu-latest
+    steps:
+      # 👇 新增：必须先 checkout，告诉 gh 命令这是在哪个仓库
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Delete Old Releases
+        uses: dev-drprasad/delete-older-releases@master
+        with:
+          keep_latest: ${{inputs.NUMBER || '5'}}
+          delete_tags: true
+
+      - name: Delete Old Workflows
+        uses: Mattraks/delete-workflow-runs@main
+        with:
+          retain_days: 14
+          keep_minimum_runs: ${{inputs.NUMBER || '5'}}
+
+      # 👇 新增：清理 GitHub Actions 所有的缓存
+      - name: Delete All Caches
+        if: github.event_name == 'workflow_dispatch' && inputs.CLEAR_CACHE
+        run: |
+          echo "正在清理 GitHub 仓库中的所有缓存文件..."
+          gh cache delete --all --succeed-on-no-caches
